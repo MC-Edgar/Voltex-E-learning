@@ -1,8 +1,6 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
   "framework": "vite",
   "rewrites": [
     {
@@ -11,3 +9,13 @@
     }
   ]
 }
+```
+
+---
+
+### **Error 4: "Failed to compile"**
+
+**Log verás:**
+```
+× Build failed in 2.3s
+[plugin:vite:import-analysis] Failed to parse source
