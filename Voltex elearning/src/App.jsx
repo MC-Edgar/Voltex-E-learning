@@ -15,6 +15,7 @@ export default function App() {
     }
   ]);
   const [showAddTutorial, setShowAddTutorial] = useState(false);
+  const [editingTutorial, setEditingTutorial] = useState(null);
   const [newTutorial, setNewTutorial] = useState({
     title: '',
     description: '',
@@ -31,11 +32,22 @@ export default function App() {
 
   const handleAddTutorial = () => {
     if (newTutorial.title && newTutorial.description) {
-      setTutorials([...tutorials, {
-        id: Date.now(),
-        ...newTutorial,
-        progress: 0
-      }]);
+      if (editingTutorial) {
+        // Actualizar tutorial existente
+        setTutorials(tutorials.map(t => 
+          t.id === editingTutorial 
+            ? { ...t, ...newTutorial }
+            : t
+        ));
+        setEditingTutorial(null);
+      } else {
+        // Crear nuevo tutorial
+        setTutorials([...tutorials, {
+          id: Date.now(),
+          ...newTutorial,
+          progress: 0
+        }]);
+      }
       setNewTutorial({
         title: '',
         description: '',
@@ -398,71 +410,208 @@ export default function App() {
 
           {showAddTutorial && (
             <div style={{
-              background: 'rgba(240,249,255,0.9)',
+              background: 'rgba(240,249,255,0.95)',
               borderRadius: '12px',
-              padding: '20px',
+              padding: '25px',
               marginBottom: '30px',
-              color: '#333'
+              color: '#333',
+              border: '1px solid rgba(0, 102, 204, 0.2)'
             }}>
               <h3 style={{
-                fontSize: '20px',
+                fontSize: '22px',
                 fontWeight: 'bold',
-                marginBottom: '20px',
-                color: '#333',
-                margin: '0 0 20px 0'
+                marginBottom: '25px',
+                color: '#0066cc',
+                margin: '0 0 25px 0'
               }}>
-                Nuevo Tutorial
+                {editingTutorial ? 'Editar Curso' : 'Crear Nuevo Curso'}
               </h3>
 
-              <input
-                type="text"
-                placeholder="Título"
-                value={newTutorial.title}
-                onChange={(e) => setNewTutorial({ ...newTutorial, title: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  marginBottom: '15px',
-                  boxSizing: 'border-box',
-                  fontSize: '14px'
-                }}
-              />
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
+                  Título del Curso *
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ej: Fundamentos de Electricidad Industrial"
+                  value={newTutorial.title}
+                  onChange={(e) => setNewTutorial({ ...newTutorial, title: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    boxSizing: 'border-box',
+                    fontSize: '14px',
+                    fontFamily: 'inherit'
+                  }}
+                />
+              </div>
 
-              <textarea
-                placeholder="Descripción"
-                value={newTutorial.description}
-                onChange={(e) => setNewTutorial({ ...newTutorial, description: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  marginBottom: '15px',
-                  boxSizing: 'border-box',
-                  fontSize: '14px',
-                  minHeight: '80px',
-                  fontFamily: 'inherit'
-                }}
-              />
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
+                  Descripción *
+                </label>
+                <textarea
+                  placeholder="Describe el contenido y objetivos del curso..."
+                  value={newTutorial.description}
+                  onChange={(e) => setNewTutorial({ ...newTutorial, description: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    boxSizing: 'border-box',
+                    fontSize: '14px',
+                    minHeight: '80px',
+                    fontFamily: 'inherit'
+                  }}
+                />
+              </div>
 
-              <textarea
-                placeholder="Contenido"
-                value={newTutorial.content}
-                onChange={(e) => setNewTutorial({ ...newTutorial, content: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  marginBottom: '15px',
-                  boxSizing: 'border-box',
-                  fontSize: '14px',
-                  minHeight: '120px',
-                  fontFamily: 'inherit'
-                }}
-              />
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
+                  Contenido Principal
+                </label>
+                <textarea
+                  placeholder="Contenido principal del curso..."
+                  value={newTutorial.content}
+                  onChange={(e) => setNewTutorial({ ...newTutorial, content: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    boxSizing: 'border-box',
+                    fontSize: '14px',
+                    minHeight: '100px',
+                    fontFamily: 'inherit'
+                  }}
+                />
+              </div>
+
+              <div style={{
+                background: 'rgba(0, 102, 204, 0.08)',
+                borderRadius: '10px',
+                padding: '20px',
+                marginBottom: '20px',
+                border: '1px solid rgba(0, 102, 204, 0.2)'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '15px'
+                }}>
+                  <h4 style={{ margin: 0, color: '#0066cc', fontSize: '16px', fontWeight: '600' }}>
+                    Secciones/Módulos ({newTutorial.sections.length})
+                  </h4>
+                  <button
+                    onClick={() => setNewTutorial({
+                      ...newTutorial,
+                      sections: [...newTutorial.sections, { id: Date.now(), title: '', duration: '30 min' }]
+                    })}
+                    style={{
+                      background: 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)',
+                      color: 'white',
+                      padding: '8px 16px',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '13px',
+                      fontWeight: '600'
+                    }}
+                  >
+                    + Agregar Sección
+                  </button>
+                </div>
+
+                {newTutorial.sections.length === 0 ? (
+                  <p style={{ color: '#666', margin: '10px 0', fontSize: '13px', fontStyle: 'italic' }}>
+                    No hay secciones. Haz clic en "+ Agregar Sección" para comenzar.
+                  </p>
+                ) : (
+                  <div style={{ display: 'grid', gap: '12px' }}>
+                    {newTutorial.sections.map((section, idx) => (
+                      <div
+                        key={section.id}
+                        style={{
+                          background: 'white',
+                          borderRadius: '8px',
+                          padding: '15px',
+                          border: '1px solid #ddd',
+                          display: 'grid',
+                          gridTemplateColumns: '1fr auto auto',
+                          gap: '10px',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <div>
+                          <input
+                            type="text"
+                            placeholder={`Título de la sección ${idx + 1}`}
+                            value={section.title}
+                            onChange={(e) => {
+                              const updated = [...newTutorial.sections];
+                              updated[idx].title = e.target.value;
+                              setNewTutorial({ ...newTutorial, sections: updated });
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '10px',
+                              border: '1px solid #ddd',
+                              borderRadius: '6px',
+                              fontSize: '13px',
+                              marginBottom: '8px',
+                              boxSizing: 'border-box',
+                              fontFamily: 'inherit'
+                            }}
+                          />
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          <input
+                            type="text"
+                            placeholder="Duración (ej: 30 min, 1 h)"
+                            value={section.duration}
+                            onChange={(e) => {
+                              const updated = [...newTutorial.sections];
+                              updated[idx].duration = e.target.value;
+                              setNewTutorial({ ...newTutorial, sections: updated });
+                            }}
+                            style={{
+                              width: '120px',
+                              padding: '10px',
+                              border: '1px solid #ddd',
+                              borderRadius: '6px',
+                              fontSize: '13px',
+                              boxSizing: 'border-box',
+                              fontFamily: 'inherit'
+                            }}
+                          />
+                          <button
+                            onClick={() => {
+                              const updated = newTutorial.sections.filter((_, i) => i !== idx);
+                              setNewTutorial({ ...newTutorial, sections: updated });
+                            }}
+                            style={{
+                              background: '#ef4444',
+                              color: 'white',
+                              border: 'none',
+                              padding: '8px 12px',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontSize: '12px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               <div style={{
                 display: 'flex',
@@ -470,14 +619,24 @@ export default function App() {
                 justifyContent: 'flex-end'
               }}>
                 <button
-                  onClick={() => setShowAddTutorial(false)}
+                  onClick={() => {
+                    setShowAddTutorial(false);
+                    setEditingTutorial(null);
+                    setNewTutorial({
+                      title: '',
+                      description: '',
+                      content: '',
+                      sections: []
+                    });
+                  }}
                   style={{
-                    padding: '10px 20px',
+                    padding: '12px 24px',
                     background: '#999',
                     color: 'white',
                     border: 'none',
                     borderRadius: '8px',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    fontWeight: '600'
                   }}
                 >
                   Cancelar
@@ -485,60 +644,158 @@ export default function App() {
                 <button
                   onClick={handleAddTutorial}
                   style={{
-                    padding: '10px 20px',
-                    background: '#10b981',
+                    padding: '12px 24px',
+                    background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
                     color: 'white',
                     border: 'none',
                     borderRadius: '8px',
                     cursor: 'pointer',
-                    fontWeight: 'bold'
+                    fontWeight: '600'
                   }}
                 >
-                  Guardar Tutorial
+                  {editingTutorial ? 'Actualizar Curso' : 'Crear Curso'}
                 </button>
               </div>
             </div>
           )}
 
           <div style={{ display: 'grid', gap: '15px' }}>
-            {tutorials.map(tutorial => (
-              <div
-                key={tutorial.id}
-                style={{
-                  background: 'rgba(0,0,0,0.2)',
-                  borderRadius: '12px',
-                  padding: '20px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
-                <div>
-                  <h4 style={{ margin: '0 0 5px 0', fontSize: '18px', fontWeight: 'bold' }}>
-                    {tutorial.title}
-                  </h4>
-                  <p style={{ margin: 0, fontSize: '14px', color: 'rgba(255,255,255,0.8)' }}>
-                    {tutorial.description}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleDeleteTutorial(tutorial.id)}
+            {tutorials.length === 0 ? (
+              <div style={{
+                textAlign: 'center',
+                padding: '40px 20px',
+                color: 'rgba(255,255,255,0.6)',
+                fontSize: '14px'
+              }}>
+                <p>No hay cursos aún. Haz clic en "+ Nuevo Curso" para crear uno.</p>
+              </div>
+            ) : (
+              tutorials.map(tutorial => (
+                <div
+                  key={tutorial.id}
                   style={{
-                    padding: '10px 15px',
-                    background: '#ef4444',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
+                    background: 'rgba(0,0,0,0.2)',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    border: '1px solid rgba(255,255,255,0.1)'
                   }}
                 >
-                  <Trash2 size={18} /> Eliminar
-                </button>
-              </div>
-            ))}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    marginBottom: '15px'
+                  }}>
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
+                        {tutorial.title}
+                      </h4>
+                      <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.8)' }}>
+                        {tutorial.description}
+                      </p>
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      gap: '10px',
+                      marginLeft: '15px'
+                    }}>
+                      <button
+                        onClick={() => {
+                          setNewTutorial(tutorial);
+                          setEditingTutorial(tutorial.id);
+                          setShowAddTutorial(true);
+                        }}
+                        style={{
+                          padding: '8px 16px',
+                          background: '#0066cc',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '13px',
+                          fontWeight: '600',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        ✎ Editar
+                      </button>
+                      <button
+                        onClick={() => handleDeleteTutorial(tutorial.id)}
+                        style={{
+                          padding: '8px 16px',
+                          background: '#ef4444',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '13px',
+                          fontWeight: '600',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        <Trash2 size={16} /> Eliminar
+                      </button>
+                    </div>
+                  </div>
+
+                  {tutorial.sections && tutorial.sections.length > 0 && (
+                    <div style={{
+                      background: 'rgba(0, 102, 204, 0.08)',
+                      borderRadius: '8px',
+                      padding: '12px',
+                      marginTop: '15px',
+                      border: '1px solid rgba(0, 102, 204, 0.2)'
+                    }}>
+                      <p style={{
+                        margin: '0 0 10px 0',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        color: '#0066cc',
+                        textTransform: 'uppercase'
+                      }}>
+                        Secciones/Módulos ({tutorial.sections.length}):
+                      </p>
+                      <div style={{ display: 'grid', gap: '8px' }}>
+                        {tutorial.sections.map((section, idx) => (
+                          <div
+                            key={section.id || idx}
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              padding: '8px 12px',
+                              background: 'rgba(255,255,255,0.05)',
+                              borderRadius: '6px',
+                              fontSize: '13px',
+                              color: 'rgba(255,255,255,0.9)'
+                            }}
+                          >
+                            <span>
+                              <strong>{idx + 1}.</strong> {section.title || `Módulo ${idx + 1}`}
+                            </span>
+                            <span style={{
+                              background: 'rgba(0, 102, 204, 0.3)',
+                              padding: '4px 12px',
+                              borderRadius: '4px',
+                              fontSize: '12px',
+                              fontWeight: '600'
+                            }}>
+                              {section.duration || '—'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
