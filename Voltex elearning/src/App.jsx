@@ -628,32 +628,29 @@ export default function App() {
         fontFamily: 'system-ui'
       }}>
         <nav style={{
-          background: 'rgba(0,0,0,0.3)',
-          padding: '20px',
+          background: 'linear-gradient(90deg,#08345a 0%, #0b5ed7 100%)',
+          padding: '14px 22px',
           color: 'white',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          boxShadow: '0 4px 14px rgba(11,78,150,0.15)'
         }}>
-          <h1 style={{ color: '#00d9ff', margin: 0, fontSize: '24px', fontWeight: 'bold' }}>
-            VOLTEX E-Learning
-          </h1>
-          <button
-            onClick={() => { setCurrentUser(null); setUserType(null); }}
-            style={{
-              padding: '8px 16px',
-              background: 'rgba(255,255,255,0.2)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            <LogOut size={18} /> Salir
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <h1 style={{ color: '#00d9ff', margin: 0, fontSize: '20px', fontWeight: '800', letterSpacing: '1px' }}>
+              VOLTEX E-Learning
+            </h1>
+          </div>
+          <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+            <button style={{ background: '#0b5ed7', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer' }}>Inicio</button>
+            <button style={{ background: 'transparent', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer' }}>Mis Cursos</button>
+            <button
+              onClick={() => { setCurrentUser(null); setUserType(null); }}
+              style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.08)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+            >
+              Cerrar Sesión
+            </button>
+          </div>
         </nav>
 
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '30px 20px' }}>
@@ -672,46 +669,31 @@ export default function App() {
             gap: '20px'
           }}>
             {tutorials.map(tutorial => (
-              <div
-                key={tutorial.id}
-                style={{
-                  background: 'rgba(255,255,255,0.1)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  borderRadius: '15px',
-                  padding: '20px',
-                  color: 'white'
-                }}
-              >
-                <h3 style={{ margin: '0 0 5px 0', fontSize: '18px', fontWeight: 'bold' }}>
-                  {tutorial.title}
-                </h3>
-                <p style={{ margin: '0 0 15px 0', color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>
-                  {tutorial.description}
-                </p>
-                <button
-                  onClick={() => {
-                    if (tutorial.exam) {
-                      handleStartExam(tutorial.id);
-                    } else {
-                      alert('Este curso aún no tiene examen disponible');
-                    }
-                  }}
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    background: tutorial.exam
-                      ? 'linear-gradient(135deg,#10b981,#34d399)'
-                      : 'linear-gradient(135deg,#999,#bbb)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: tutorial.exam ? 'pointer' : 'not-allowed',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  {tutorial.exam ? 'Ir al Examen →' : 'Sin Examen'}
-                </button>
+              <div key={tutorial.id} style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 8px 24px rgba(2,6,23,0.35)', border: '1px solid rgba(0,0,0,0.12)' }}>
+                <div style={{ height: '120px', background: 'linear-gradient(90deg,#00b4ff 0%, #0b5ed7 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.12)' }}>
+                  <BookOpen size={56} />
+                </div>
+                <div style={{ background: 'white', padding: '18px' }}>
+                  <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '700', color: '#0b3b66' }}>{tutorial.title}</h3>
+                  <p style={{ margin: 0, fontSize: '13px', color: '#6c757d' }}>{tutorial.description}</p>
+                  <div style={{ marginTop: 14 }}>
+                    <button
+                      onClick={() => { if (tutorial.exam) { handleStartExam(tutorial.id); } else { alert('Este curso aún no tiene examen disponible'); } }}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        background: tutorial.exam ? 'linear-gradient(90deg,#00b4ff,#00d9ff)' : 'linear-gradient(90deg,#cfcfcf,#e6e6e6)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: tutorial.exam ? 'pointer' : 'not-allowed',
+                        fontWeight: '700'
+                      }}
+                    >
+                      {tutorial.exam ? 'Ir al Examen →' : 'Sin Examen'}
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -728,38 +710,26 @@ export default function App() {
       fontFamily: 'system-ui'
     }}>
       <nav style={{
-        background: 'rgba(0,0,0,0.3)',
-        padding: '20px',
+        background: 'linear-gradient(90deg,#08345a 0%, #0b5ed7 100%)',
+        padding: '12px 22px',
         color: 'white',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        boxShadow: '0 4px 14px rgba(11,78,150,0.15)'
       }}>
-        <h1 style={{
-          color: '#00d9ff',
-          textShadow: '0 0 20px rgba(0,217,255,0.5)',
-          margin: 0,
-          fontSize: '24px',
-          fontWeight: 'bold'
-        }}>
+        <div style={{ color: '#00d9ff', textShadow: '0 0 10px rgba(0,217,255,0.12)', margin: 0, fontSize: '20px', fontWeight: '800' }}>
           VOLTEX E-Learning
-        </h1>
-        <button
-          onClick={() => { setCurrentUser(null); setUserType(null); }}
-          style={{
-            padding: '8px 16px',
-            background: 'rgba(255,255,255,0.2)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}
-        >
-          <LogOut size={18} /> Salir
-        </button>
+        </div>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <button onClick={() => setShowAddTutorial(!showAddTutorial)} style={{ background: 'white', color: '#0b5ed7', padding: '8px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: '700' }}>+ Nuevo</button>
+          <button
+            onClick={() => { setCurrentUser(null); setUserType(null); }}
+            style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.08)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+          >
+            Cerrar Sesión
+          </button>
+        </div>
       </nav>
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '30px 20px' }}>
