@@ -11,7 +11,8 @@ export default function App() {
       description: 'Conceptos esenciales de electricidad aplicados a la industria',
       content: 'Contenido del tutorial...',
       sections: [],
-      progress: 0
+      progress: 0,
+      exam: null
     }
   ]);
   const [showAddTutorial, setShowAddTutorial] = useState(false);
@@ -21,6 +22,17 @@ export default function App() {
     description: '',
     content: '',
     sections: []
+  });
+
+  // Estados para exámenes
+  const [currentExam, setCurrentExam] = useState(null);
+  const [examAnswers, setExamAnswers] = useState({});
+  const [examResults, setExamResults] = useState(null);
+  const [examHistory, setExamHistory] = useState([]);
+  const [showExamEditor, setShowExamEditor] = useState(false);
+  const [editingExam, setEditingExam] = useState(null);
+  const [newExam, setNewExam] = useState({
+    questions: []
   });
 
   const handleLogin = (email, password) => {
@@ -60,6 +72,81 @@ export default function App() {
 
   const handleDeleteTutorial = (id) => {
     setTutorials(tutorials.filter(t => t.id !== id));
+  };
+
+  // Funciones para exámenes
+  const handleStartExam = (tutorialId) => {
+    const tutorial = tutorials.find(t => t.id === tutorialId);
+    if (tutorial && tutorial.exam) {
+      setCurrentExam({ ...tutorial.exam, tutorialId });
+      setExamAnswers({});
+      setExamResults(null);
+    }
+  };
+
+  const handleSubmitExam = () => {
+    if (!currentExam) return;
+    
+    // Verificar que todas las preguntas estén respondidas
+    const allAnswered = currentExam.questions.every(q => examAnswers[q.id] !== undefined);
+    if (!allAnswered) {
+      alert('Por favor responde todas las preguntas antes de enviar');
+      return;
+    }
+
+    // Calcular resultados
+    let correctCount = 0;
+    currentExam.questions.forEach(question => {
+      if (examAnswers[question.id] === question.correctAnswer) {
+        correctCount++;
+      }
+    });
+
+    const percentage = Math.round((correctCount / currentExam.questions.length) * 100);
+    const passed = percentage >= 60;
+
+    const result = {
+      tutorialId: currentExam.tutorialId,
+      passed,
+      percentage,
+      correctCount,
+      totalQuestions: currentExam.questions.length,
+      timestamp: new Date().toLocaleString(),
+      answers: examAnswers
+    };
+
+    setExamResults(result);
+    setExamHistory([...examHistory, result]);
+  };
+
+  const handleRetryExam = () => {
+    setExamAnswers({});
+    setExamResults(null);
+  };
+
+  const handleCloseExam = () => {
+    setCurrentExam(null);
+    setExamAnswers({});
+    setExamResults(null);
+  };
+
+  const handleAddExam = (tutorialId) => {
+    if (newExam.questions.length === 0) {
+      alert('Agrega al menos una pregunta');
+      return;
+    }
+
+    const updatedTutorials = tutorials.map(t => {
+      if (t.id === tutorialId) {
+        return { ...t, exam: newExam };
+      }
+      return t;
+    });
+
+    setTutorials(updatedTutorials);
+    setNewExam({ questions: [] });
+    setShowExamEditor(false);
+    setEditingExam(null);
   };
 
   if (!currentUser) {
@@ -235,6 +322,306 @@ export default function App() {
   }
 
   if (userType === 'student') {
+    // Si hay un examen activo, mostrar el examen
+    if (currentExam && !examResults) {
+      return (
+        <div style={{
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #0a2a4a 0%, #1a3a5a 100%)',
+          fontFamily: 'system-ui',
+          padding: '20px'
+        }}>
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{
+              background: 'rgba(0, 102, 204, 0.1)',
+              borderRadius: '12px',
+              padding: '30px',
+              border: '1px solid rgba(0, 102, 204, 0.3)'
+            }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '30px'
+              }}>
+                <h1 style={{
+                  color: '#00d9ff',
+                  margin: 0,
+                  fontSize: '28px',
+                  fontWeight: 'bold'
+                }}>
+                  Examen del Curso
+                </h1>
+                <button
+                  onClick={handleCloseExam}
+                  style={{
+                    background: '#ef4444',
+                    color: 'white',
+                    border: 'none',
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    fontWeight: '600'
+                  }}
+                >
+                  Cerrar
+                </button>
+              </div>
+
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                padding: '15px',
+                borderRadius: '8px',
+                marginBottom: '30px',
+                borderLeft: '4px solid #00d9ff'
+              }}>
+                <p style={{ color: '#ddd', margin: 0, fontSize: '14px' }}>
+                  <strong>Instrucciones:</strong> Responde todas las preguntas. La corrección será automática al enviar.
+                </p>
+              </div>
+
+              <div style={{ display: 'grid', gap: '25px', marginBottom: '30px' }}>
+                {currentExam.questions.map((question, idx) => (
+                  <div
+                    key={question.id}
+                    style={{
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      borderRadius: '10px',
+                      padding: '20px',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}
+                  >
+                    <h3 style={{
+                      color: '#00d9ff',
+                      margin: '0 0 15px 0',
+                      fontSize: '16px',
+                      fontWeight: '600'
+                    }}>
+                      Pregunta {idx + 1} de {currentExam.questions.length}
+                    </h3>
+                    <p style={{
+                      color: '#fff',
+                      margin: '0 0 15px 0',
+                      fontSize: '15px',
+                      lineHeight: '1.6'
+                    }}>
+                      {question.text}
+                    </p>
+                    <div style={{ display: 'grid', gap: '10px' }}>
+                      {question.options.map((option, optIdx) => (
+                        <button
+                          key={optIdx}
+                          onClick={() => setExamAnswers({
+                            ...examAnswers,
+                            [question.id]: optIdx
+                          })}
+                          style={{
+                            padding: '12px 15px',
+                            background: examAnswers[question.id] === optIdx
+                              ? 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)'
+                              : 'rgba(255, 255, 255, 0.08)',
+                            border: examAnswers[question.id] === optIdx
+                              ? '2px solid #00d9ff'
+                              : '1px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: '8px',
+                            color: 'white',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            fontSize: '14px',
+                            transition: 'all 0.3s',
+                            fontWeight: examAnswers[question.id] === optIdx ? '600' : '400'
+                          }}
+                        >
+                          <span style={{
+                            display: 'inline-block',
+                            width: '24px',
+                            height: '24px',
+                            background: examAnswers[question.id] === optIdx ? '#00d9ff' : 'rgba(255, 255, 255, 0.2)',
+                            borderRadius: '50%',
+                            marginRight: '10px',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                            {String.fromCharCode(65 + optIdx)}
+                          </span>
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={handleSubmitExam}
+                style={{
+                  width: '100%',
+                  padding: '15px',
+                  background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  fontWeight: 'bold'
+                }}
+              >
+                Enviar Examen
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Si hay resultados, mostrar resultados
+    if (examResults) {
+      const passed = examResults.passed;
+      const percentage = examResults.percentage;
+      
+      let badgeColor, badgeText, badgeEmoji;
+      if (percentage >= 90) {
+        badgeColor = '#fbbf24';
+        badgeText = 'Excelente';
+        badgeEmoji = '⭐';
+      } else if (percentage >= 75) {
+        badgeColor = '#10b981';
+        badgeText = 'Muy Bueno';
+        badgeEmoji = '✨';
+      } else if (percentage >= 60) {
+        badgeColor = '#3b82f6';
+        badgeText = 'Aprobado';
+        badgeEmoji = '✓';
+      } else {
+        badgeColor = '#ef4444';
+        badgeText = 'Reprobado';
+        badgeEmoji = '✗';
+      }
+
+      return (
+        <div style={{
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #0a2a4a 0%, #1a3a5a 100%)',
+          fontFamily: 'system-ui',
+          padding: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <div style={{ maxWidth: '600px', width: '100%' }}>
+            <div style={{
+              background: 'rgba(0, 0, 0, 0.4)',
+              borderRadius: '15px',
+              padding: '40px',
+              textAlign: 'center',
+              border: `2px solid ${badgeColor}`
+            }}>
+              <div style={{
+                width: '100px',
+                height: '100px',
+                background: `linear-gradient(135deg, ${badgeColor} 0%, ${badgeColor}cc 100%)`,
+                borderRadius: '50%',
+                margin: '0 auto 30px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '48px'
+              }}>
+                {badgeEmoji}
+              </div>
+
+              <h1 style={{
+                color: badgeColor,
+                fontSize: '36px',
+                fontWeight: 'bold',
+                margin: '0 0 10px 0'
+              }}>
+                {badgeText}
+              </h1>
+
+              <div style={{
+                background: 'rgba(0, 102, 204, 0.2)',
+                borderRadius: '10px',
+                padding: '30px',
+                marginBottom: '30px'
+              }}>
+                <div style={{
+                  color: '#00d9ff',
+                  fontSize: '48px',
+                  fontWeight: 'bold',
+                  margin: '0 0 10px 0'
+                }}>
+                  {percentage}%
+                </div>
+                <p style={{
+                  color: '#bbb',
+                  margin: '0 0 20px 0',
+                  fontSize: '16px'
+                }}>
+                  Respuestas Correctas
+                </p>
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginTop: '15px'
+                }}>
+                  <p style={{ color: '#ddd', margin: 0, fontSize: '18px', fontWeight: 'bold' }}>
+                    {examResults.correctCount} de {examResults.totalQuestions} preguntas
+                  </p>
+                </div>
+              </div>
+
+              <p style={{
+                color: '#aaa',
+                fontSize: '12px',
+                margin: '0 0 30px 0'
+              }}>
+                Realizado: {examResults.timestamp}
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <button
+                  onClick={handleRetryExam}
+                  style={{
+                    padding: '12px',
+                    background: '#0066cc',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}
+                >
+                  Reintentar
+                </button>
+                <button
+                  onClick={handleCloseExam}
+                  style={{
+                    padding: '12px',
+                    background: '#666',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}
+                >
+                  Volver
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div style={{
         minHeight: '100vh',
@@ -304,18 +691,27 @@ export default function App() {
                   {tutorial.description}
                 </p>
                 <button
+                  onClick={() => {
+                    if (tutorial.exam) {
+                      handleStartExam(tutorial.id);
+                    } else {
+                      alert('Este curso aún no tiene examen disponible');
+                    }
+                  }}
                   style={{
                     width: '100%',
                     padding: '10px',
-                    background: 'linear-gradient(135deg,#10b981,#34d399)',
+                    background: tutorial.exam
+                      ? 'linear-gradient(135deg,#10b981,#34d399)'
+                      : 'linear-gradient(135deg,#999,#bbb)',
                     color: 'white',
                     border: 'none',
                     borderRadius: '8px',
-                    cursor: 'pointer',
+                    cursor: tutorial.exam ? 'pointer' : 'not-allowed',
                     fontWeight: 'bold'
                   }}
                 >
-                  Continuar →
+                  {tutorial.exam ? 'Ir al Examen →' : 'Sin Examen'}
                 </button>
               </div>
             ))}
@@ -796,6 +1192,282 @@ export default function App() {
                 </div>
               ))
             )}
+          </div>
+        </div>
+
+        {/* Sección de Gestión de Exámenes */}
+        <div style={{
+          background: 'rgba(255,255,255,0.08)',
+          border: '1px solid rgba(255,255,255,0.2)',
+          borderRadius: '15px',
+          padding: '30px',
+          color: 'white',
+          marginTop: '30px'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '30px'
+          }}>
+            <h2 style={{
+              fontSize: '28px',
+              fontWeight: 'bold',
+              margin: 0
+            }}>
+              Gestión de Exámenes
+            </h2>
+          </div>
+
+          <div style={{ display: 'grid', gap: '20px' }}>
+            {tutorials.map(tutorial => (
+              <div
+                key={tutorial.id}
+                style={{
+                  background: 'rgba(0,0,0,0.3)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  border: '1px solid rgba(0, 102, 204, 0.2)'
+                }}
+              >
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '15px'
+                }}>
+                  <div>
+                    <h3 style={{ margin: '0 0 5px 0', color: '#00d9ff', fontSize: '18px', fontWeight: 'bold' }}>
+                      {tutorial.title}
+                    </h3>
+                    <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>
+                      {tutorial.exam ? `${tutorial.exam.questions.length} preguntas` : 'Sin examen'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setEditingExam(tutorial.id);
+                      if (tutorial.exam) {
+                        setNewExam(tutorial.exam);
+                      } else {
+                        setNewExam({ questions: [] });
+                      }
+                      setShowExamEditor(tutorial.id);
+                    }}
+                    style={{
+                      background: 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)',
+                      color: 'white',
+                      padding: '8px 16px',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '13px',
+                      fontWeight: '600'
+                    }}
+                  >
+                    {tutorial.exam ? '✎ Editar Examen' : '+ Crear Examen'}
+                  </button>
+                </div>
+
+                {showExamEditor === tutorial.id && (
+                  <div style={{
+                    background: 'rgba(0, 102, 204, 0.1)',
+                    borderRadius: '10px',
+                    padding: '20px',
+                    marginTop: '15px',
+                    border: '1px solid rgba(0, 102, 204, 0.3)'
+                  }}>
+                    <h4 style={{ margin: '0 0 20px 0', color: '#00d9ff', fontSize: '16px', fontWeight: '600' }}>
+                      {newExam.questions.length > 0 ? 'Editar Preguntas' : 'Agregar Preguntas'}
+                    </h4>
+
+                    {newExam.questions.map((question, qIdx) => (
+                      <div
+                        key={qIdx}
+                        style={{
+                          background: 'rgba(255,255,255,0.05)',
+                          borderRadius: '8px',
+                          padding: '15px',
+                          marginBottom: '15px',
+                          border: '1px solid rgba(255,255,255,0.1)'
+                        }}
+                      >
+                        <div style={{ marginBottom: '10px' }}>
+                          <label style={{ display: 'block', fontSize: '12px', color: '#bbb', marginBottom: '5px' }}>
+                            Pregunta {qIdx + 1}
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="Texto de la pregunta"
+                            value={question.text}
+                            onChange={(e) => {
+                              const updated = [...newExam.questions];
+                              updated[qIdx].text = e.target.value;
+                              setNewExam({ questions: updated });
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '10px',
+                              background: 'rgba(255,255,255,0.08)',
+                              border: '1px solid rgba(255,255,255,0.2)',
+                              borderRadius: '6px',
+                              color: 'white',
+                              fontSize: '13px',
+                              boxSizing: 'border-box'
+                            }}
+                          />
+                        </div>
+
+                        <div style={{ marginBottom: '10px' }}>
+                          <label style={{ display: 'block', fontSize: '12px', color: '#bbb', marginBottom: '5px' }}>
+                            Opciones (separadas por | )
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="Opción A | Opción B | Opción C | Opción D"
+                            value={question.options.join(' | ')}
+                            onChange={(e) => {
+                              const updated = [...newExam.questions];
+                              updated[qIdx].options = e.target.value.split('|').map(o => o.trim());
+                              setNewExam({ questions: updated });
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '10px',
+                              background: 'rgba(255,255,255,0.08)',
+                              border: '1px solid rgba(255,255,255,0.2)',
+                              borderRadius: '6px',
+                              color: 'white',
+                              fontSize: '13px',
+                              boxSizing: 'border-box'
+                            }}
+                          />
+                        </div>
+
+                        <div style={{ marginBottom: '10px' }}>
+                          <label style={{ display: 'block', fontSize: '12px', color: '#bbb', marginBottom: '5px' }}>
+                            Respuesta Correcta (0-3)
+                          </label>
+                          <select
+                            value={question.correctAnswer}
+                            onChange={(e) => {
+                              const updated = [...newExam.questions];
+                              updated[qIdx].correctAnswer = parseInt(e.target.value);
+                              setNewExam({ questions: updated });
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '10px',
+                              background: 'rgba(255,255,255,0.08)',
+                              border: '1px solid rgba(255,255,255,0.2)',
+                              borderRadius: '6px',
+                              color: 'white',
+                              fontSize: '13px',
+                              boxSizing: 'border-box'
+                            }}
+                          >
+                            {[0, 1, 2, 3].map(i => (
+                              <option key={i} value={i} style={{ background: '#333', color: 'white' }}>
+                                Opción {String.fromCharCode(65 + i)}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            const updated = newExam.questions.filter((_, i) => i !== qIdx);
+                            setNewExam({ questions: updated });
+                          }}
+                          style={{
+                            background: '#ef4444',
+                            color: 'white',
+                            border: 'none',
+                            padding: '6px 12px',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            fontWeight: '600'
+                          }}
+                        >
+                          Eliminar Pregunta
+                        </button>
+                      </div>
+                    ))}
+
+                    <div style={{
+                      display: 'flex',
+                      gap: '10px',
+                      marginTop: '15px'
+                    }}>
+                      <button
+                        onClick={() => {
+                          const newQuestion = {
+                            id: Date.now(),
+                            text: '',
+                            options: ['', '', '', ''],
+                            correctAnswer: 0
+                          };
+                          setNewExam({
+                            questions: [...newExam.questions, newQuestion]
+                          });
+                        }}
+                        style={{
+                          background: '#0066cc',
+                          color: 'white',
+                          padding: '8px 16px',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '13px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        + Agregar Pregunta
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          handleAddExam(tutorial.id);
+                        }}
+                        style={{
+                          background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+                          color: 'white',
+                          padding: '8px 16px',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '13px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Guardar Examen
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setShowExamEditor(false);
+                          setEditingExam(null);
+                          setNewExam({ questions: [] });
+                        }}
+                        style={{
+                          background: '#666',
+                          color: 'white',
+                          padding: '8px 16px',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '13px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </div>
