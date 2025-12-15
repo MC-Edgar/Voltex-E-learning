@@ -434,7 +434,7 @@ export default function App() {
                           }}
                         >
                           <span style={{
-                            display: 'inline-block',
+                            display: 'inline-flex',
                             width: '24px',
                             height: '24px',
                             background: examAnswers[question.id] === optIdx ? '#00d9ff' : 'rgba(255, 255, 255, 0.2)',
@@ -442,7 +442,6 @@ export default function App() {
                             marginRight: '10px',
                             fontSize: '12px',
                             fontWeight: 'bold',
-                            display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'center'
                           }}>
