@@ -54,28 +54,50 @@ export default function App() {
     return (
       <div style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg,#667eea 0%,#764ba2 100%)',
+        background: 'linear-gradient(135deg, #0a2a4a 0%, #1a3a5a 50%, #0a1a3a 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontFamily: 'system-ui'
+        fontFamily: 'system-ui',
+        padding: '20px'
       }}>
         <div style={{
-          background: 'white',
-          padding: '40px',
+          background: 'rgba(20, 35, 55, 0.95)',
+          padding: '50px 40px',
           borderRadius: '15px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-          maxWidth: '400px',
-          width: '90%'
+          boxShadow: '0 25px 80px rgba(0, 0, 0, 0.6)',
+          maxWidth: '450px',
+          width: '100%',
+          border: '1px solid rgba(0, 217, 255, 0.2)'
         }}>
-          <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-            <BookOpen size={48} style={{ color: '#667eea', margin: '0 auto 15px' }} />
-            <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#333', margin: '0' }}>
-              VOLTEX E-Learning
+          <div style={{ textAlign: 'center', marginBottom: '45px' }}>
+            <h1 style={{
+              fontSize: '48px',
+              fontWeight: '800',
+              color: '#00d9ff',
+              margin: '0 0 8px 0',
+              textShadow: '0 0 30px rgba(0, 217, 255, 0.4)',
+              letterSpacing: '2px'
+            }}>
+              VOLTEX
             </h1>
-            <p style={{ color: '#666', marginTop: '10px' }}>
-              Plataforma de capacitación en electricidad industrial
+            <p style={{
+              fontSize: '13px',
+              color: '#888',
+              margin: '0 0 15px 0',
+              letterSpacing: '1px',
+              textTransform: 'uppercase'
+            }}>
+              Power Engineers
             </p>
+            <h2 style={{
+              fontSize: '24px',
+              fontWeight: '300',
+              color: '#bbb',
+              margin: '0'
+            }}>
+              E-Learning
+            </h2>
           </div>
 
           <form onSubmit={(e) => {
@@ -84,51 +106,115 @@ export default function App() {
             const password = e.target.password.value;
             handleLogin(email, password);
           }}>
-            <input
-              type="email"
-              name="email"
-              placeholder="Correo electrónico"
-              required
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                marginBottom: '15px',
-                fontSize: '14px',
-                boxSizing: 'border-box'
-              }}
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Contraseña"
-              required
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                marginBottom: '20px',
-                fontSize: '14px',
-                boxSizing: 'border-box'
-              }}
-            />
+            <div style={{ marginBottom: '25px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: '600',
+                color: '#ddd',
+                marginBottom: '8px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}>
+                Usuario
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="correo@ejemplo.com"
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  border: '1px solid rgba(0, 217, 255, 0.3)',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  color: '#ddd',
+                  transition: 'all 0.3s'
+                }}
+                onFocus={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.12)';
+                  e.target.style.borderColor = 'rgba(0, 217, 255, 0.6)';
+                  e.target.style.boxShadow = '0 0 15px rgba(0, 217, 255, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.08)';
+                  e.target.style.borderColor = 'rgba(0, 217, 255, 0.3)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '35px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: '600',
+                color: '#ddd',
+                marginBottom: '8px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}>
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  border: '1px solid rgba(0, 217, 255, 0.3)',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  color: '#ddd',
+                  transition: 'all 0.3s'
+                }}
+                onFocus={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.12)';
+                  e.target.style.borderColor = 'rgba(0, 217, 255, 0.6)';
+                  e.target.style.boxShadow = '0 0 15px rgba(0, 217, 255, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.08)';
+                  e.target.style.borderColor = 'rgba(0, 217, 255, 0.3)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
+
             <button
               type="submit"
               style={{
                 width: '100%',
-                padding: '12px',
-                background: '#667eea',
+                padding: '13px',
+                background: 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)',
                 color: 'white',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '6px',
                 cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '16px'
+                fontWeight: '600',
+                fontSize: '15px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.8px',
+                transition: 'all 0.3s',
+                boxShadow: '0 8px 20px rgba(0, 102, 204, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.boxShadow = '0 12px 30px rgba(0, 102, 204, 0.5)';
+                e.target.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.boxShadow = '0 8px 20px rgba(0, 102, 204, 0.3)';
+                e.target.style.transform = 'translateY(0)';
               }}
             >
-              Ingresar
+              Login
             </button>
           </form>
         </div>
