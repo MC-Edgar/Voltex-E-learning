@@ -805,40 +805,41 @@ export default function App() {
 
           {showAddTutorial && (
             <div style={{
-              background: 'rgba(240,249,255,0.95)',
-              borderRadius: '12px',
-              padding: '25px',
+              background: '#ffffff',
+              borderRadius: '10px',
+              padding: '24px',
               marginBottom: '30px',
-              color: '#333',
-              border: '1px solid rgba(0, 102, 204, 0.2)'
+              color: '#222',
+              border: '1px solid #e6eefc',
+              boxShadow: '0 6px 18px rgba(11, 77, 150, 0.06)'
             }}>
               <h3 style={{
-                fontSize: '22px',
-                fontWeight: 'bold',
-                marginBottom: '25px',
-                color: '#0066cc',
-                margin: '0 0 25px 0'
+                fontSize: '20px',
+                fontWeight: '700',
+                marginBottom: '18px',
+                color: '#0b5ed7',
+                margin: '0 0 18px 0'
               }}>
-                {editingTutorial ? 'Editar Curso' : 'Crear Nuevo Curso'}
+                {editingTutorial ? 'Editar Curso' : 'Nuevo Tutorial'}
               </h3>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
-                  Título del Curso *
+              <div style={{ marginBottom: '12px' }}>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#2b2b2b' }}>
+                  Título
                 </label>
                 <input
                   type="text"
-                  placeholder="Ej: Fundamentos de Electricidad Industrial"
+                  placeholder="Título"
                   value={newTutorial.title}
                   onChange={(e) => setNewTutorial({ ...newTutorial, title: e.target.value })}
                   style={{
                     width: '100%',
-                    padding: '12px',
-                    border: '1px solid #ddd',
-                    borderRadius: '8px',
+                    padding: '10px 12px',
+                    border: '1px solid #e6e6e6',
+                    borderRadius: '6px',
                     boxSizing: 'border-box',
                     fontSize: '14px',
-                    fontFamily: 'inherit'
+                    background: '#fbfdff'
                   }}
                 />
               </div>
@@ -886,11 +887,11 @@ export default function App() {
               </div>
 
               <div style={{
-                background: 'rgba(0, 102, 204, 0.08)',
-                borderRadius: '10px',
-                padding: '20px',
-                marginBottom: '20px',
-                border: '1px solid rgba(0, 102, 204, 0.2)'
+                background: '#f7fbff',
+                borderRadius: '8px',
+                padding: '18px',
+                marginBottom: '18px',
+                border: '1px solid #e3f0ff'
               }}>
                 <div style={{
                   display: 'flex',
@@ -907,17 +908,17 @@ export default function App() {
                       sections: [...newTutorial.sections, { id: Date.now(), title: '', duration: '30 min' }]
                     })}
                     style={{
-                      background: 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)',
+                      background: '#28a745',
                       color: 'white',
-                      padding: '8px 16px',
+                      padding: '8px 14px',
                       border: 'none',
                       borderRadius: '6px',
                       cursor: 'pointer',
                       fontSize: '13px',
-                      fontWeight: '600'
+                      fontWeight: '700'
                     }}
                   >
-                    + Agregar Sección
+                    + Sección
                   </button>
                 </div>
 
@@ -941,7 +942,7 @@ export default function App() {
                           alignItems: 'center'
                         }}
                       >
-                        <div>
+                          <div>
                           <input
                             type="text"
                             placeholder={`Título de la sección ${idx + 1}`}
@@ -954,16 +955,16 @@ export default function App() {
                             style={{
                               width: '100%',
                               padding: '10px',
-                              border: '1px solid #ddd',
+                              border: '1px solid #e6e6e6',
                               borderRadius: '6px',
                               fontSize: '13px',
                               marginBottom: '8px',
                               boxSizing: 'border-box',
-                              fontFamily: 'inherit'
+                              background: '#fbfdff'
                             }}
                           />
                         </div>
-                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                           <input
                             type="text"
                             placeholder="Duración (ej: 30 min, 1 h)"
@@ -989,14 +990,14 @@ export default function App() {
                               setNewTutorial({ ...newTutorial, sections: updated });
                             }}
                             style={{
-                              background: '#ef4444',
+                              background: '#dc3545',
                               color: 'white',
                               border: 'none',
                               padding: '8px 12px',
                               borderRadius: '6px',
                               cursor: 'pointer',
                               fontSize: '12px',
-                              fontWeight: '600'
+                              fontWeight: '700'
                             }}
                           >
                             Eliminar
@@ -1006,6 +1007,19 @@ export default function App() {
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Upload area similar to design */}
+              <div style={{
+                border: '1px dashed #cfe9ff',
+                borderRadius: '8px',
+                padding: '22px',
+                textAlign: 'center',
+                color: '#6c757d',
+                marginBottom: '16px'
+              }}>
+                <div style={{ fontSize: '22px', color: '#0b5ed7', marginBottom: '8px' }}>↑</div>
+                <div>Subir Videos/PDFs/Imágenes desde PC</div>
               </div>
 
               <div style={{
