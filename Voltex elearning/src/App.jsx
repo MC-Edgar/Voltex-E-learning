@@ -502,7 +502,7 @@ export default function App() {
               style={{
                 width: '100%',
                 padding: '13px',
-                background: 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)',
+                background: 'linear-gradient(135deg, #0a2a4a 0%, #1a3a5a 100%)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '6px',
@@ -629,7 +629,7 @@ export default function App() {
                           style={{
                             padding: '12px 15px',
                             background: examAnswers[question.id] === optIdx
-                              ? 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)'
+                              ? 'linear-gradient(135deg, #0a2a4a 0%, #1a3a5a 100%)'
                               : 'rgba(255, 255, 255, 0.08)',
                             border: examAnswers[question.id] === optIdx
                               ? '2px solid #00d9ff'
@@ -798,7 +798,7 @@ export default function App() {
                   onClick={handleRetryExam}
                   style={{
                     padding: '12px',
-                    background: '#0066cc',
+                    background: '#0a2a4a',
                     color: 'white',
                     border: 'none',
                     borderRadius: '8px',
@@ -1177,7 +1177,7 @@ export default function App() {
             <button
               onClick={() => setShowAddTutorial(!showAddTutorial)}
               style={{
-                background: 'linear-gradient(135deg,#0066cc 0%,#00d9ff 100%)',
+                background: 'linear-gradient(135deg,#0a2a4a 0%,#1a3a5a 100%)',
                 color: 'white',
                 padding: '12px 24px',
                 border: 'none',
@@ -1289,7 +1289,7 @@ export default function App() {
                   alignItems: 'center',
                   marginBottom: '15px'
                 }}>
-                  <h4 style={{ margin: 0, color: '#0066cc', fontSize: '16px', fontWeight: '600' }}>
+                  <h4 style={{ margin: 0, color: '#0a2a4a', fontSize: '16px', fontWeight: '600' }}>
                     Secciones/Módulos ({newTutorial.sections.length})
                   </h4>
                   <button
@@ -1506,7 +1506,7 @@ export default function App() {
                         }}
                         style={{
                           padding: '8px 16px',
-                          background: '#0066cc',
+                          background: '#0a2a4a',
                           color: 'white',
                           border: 'none',
                           borderRadius: '6px',
@@ -1555,7 +1555,7 @@ export default function App() {
                         margin: '0 0 10px 0',
                         fontSize: '12px',
                         fontWeight: '600',
-                        color: '#0066cc',
+                        color: '#0a2a4a',
                         textTransform: 'uppercase'
                       }}>
                         Secciones/Módulos ({tutorial.sections.length}):
@@ -1658,7 +1658,7 @@ export default function App() {
                       setShowExamEditor(tutorial.id);
                     }}
                     style={{
-                      background: 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)',
+                      background: 'linear-gradient(135deg, #0a2a4a 0%, #1a3a5a 100%)',
                       color: 'white',
                       padding: '8px 16px',
                       border: 'none',
@@ -1816,7 +1816,7 @@ export default function App() {
                           });
                         }}
                         style={{
-                          background: '#0066cc',
+                          background: '#0a2a4a',
                           color: 'white',
                           padding: '8px 16px',
                           border: 'none',
