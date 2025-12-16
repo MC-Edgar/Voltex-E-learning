@@ -228,9 +228,15 @@ export default function App() {
   });
 
   const handleLogin = (email, password) => {
-    if (email && password) {
-      setCurrentUser({ email, name: email.split('@')[0] });
-      setUserType(email === 'admin' ? 'instructor' : 'student');
+    // Validar credenciales específicas
+    if (email === 'Administrador' && password === 'admin') {
+      setCurrentUser({ email, name: 'Administrador' });
+      setUserType('instructor');
+    } else if (email === 'ecoronel' && password === '1234') {
+      setCurrentUser({ email, name: 'Edgar Coronel' });
+      setUserType('student');
+    } else {
+      alert('Usuario o contraseña incorrectos');
     }
   };
 
@@ -422,9 +428,9 @@ export default function App() {
                 Usuario
               </label>
               <input
-                type="email"
+                type="text"
                 name="email"
-                placeholder="correo@ejemplo.com"
+                placeholder="Administrador o ecoronel"
                 required
                 style={{
                   width: '100%',
