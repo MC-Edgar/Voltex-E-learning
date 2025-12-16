@@ -10,9 +10,29 @@ export default function App() {
       title: 'Fundamentos de Electricidad Industrial',
       description: 'Conceptos esenciales de electricidad aplicados a la industria',
       content: 'Contenido del tutorial...',
-      sections: [],
+      sections: [
+        { id: 1, title: 'Introducción', duration: '15' },
+        { id: 2, title: 'Conceptos Básicos', duration: '30' },
+        { id: 3, title: 'Aplicaciones Prácticas', duration: '45' }
+      ],
       progress: 0,
-      exam: null
+      exam: {
+        id: 'exam-1',
+        questions: [
+          {
+            id: 'q1',
+            text: '¿Cuál es la unidad de voltaje?',
+            options: ['Amperio', 'Voltio', 'Ohmio', 'Vatio'],
+            correctAnswer: 1
+          },
+          {
+            id: 'q2',
+            text: '¿Qué es la corriente eléctrica?',
+            options: ['Flujo de voltaje', 'Flujo de electrones', 'Resistencia', 'Potencia'],
+            correctAnswer: 1
+          }
+        ]
+      }
     }
   ]);
   const [showAddTutorial, setShowAddTutorial] = useState(false);
@@ -78,7 +98,7 @@ export default function App() {
   const handleStartExam = (tutorialId) => {
     const tutorial = tutorials.find(t => t.id === tutorialId);
     if (tutorial && tutorial.exam) {
-      setCurrentExam({ ...tutorial.exam, tutorialId });
+      setCurrentExam({ ...tutorial.exam, tutorialId, id: tutorial.exam.id });
       setExamAnswers({});
       setExamResults(null);
     }
@@ -106,6 +126,7 @@ export default function App() {
     const passed = percentage >= 60;
 
     const result = {
+      examId: currentExam.id,
       tutorialId: currentExam.tutorialId,
       passed,
       percentage,
@@ -114,6 +135,17 @@ export default function App() {
       timestamp: new Date().toLocaleString(),
       answers: examAnswers
     };
+
+    // Actualizar progreso del tutorial si pasó
+    if (passed) {
+      const updatedTutorials = tutorials.map(t => {
+        if (t.id === currentExam.tutorialId) {
+          return { ...t, progress: 100 };
+        }
+        return t;
+      });
+      setTutorials(updatedTutorials);
+    }
 
     setExamResults(result);
     setExamHistory([...examHistory, result]);
@@ -656,46 +688,137 @@ export default function App() {
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '30px 20px' }}>
           <h2 style={{
             color: 'white',
-            fontSize: '32px',
+            fontSize: '28px',
             fontWeight: 'bold',
             marginBottom: '30px'
           }}>
-            Mis Tutoriales
+            Mis Cursos
           </h2>
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: '20px'
+            gridTemplateColumns: '1fr',
+            gap: '16px'
           }}>
-            {tutorials.map(tutorial => (
-              <div key={tutorial.id} style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 8px 24px rgba(2,6,23,0.35)', border: '1px solid rgba(0,0,0,0.12)' }}>
-                <div style={{ height: '120px', background: 'linear-gradient(90deg,#00b4ff 0%, #0b5ed7 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.12)' }}>
-                  <BookOpen size={56} />
-                </div>
-                <div style={{ background: 'white', padding: '18px' }}>
-                  <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '700', color: '#0b3b66' }}>{tutorial.title}</h3>
-                  <p style={{ margin: 0, fontSize: '13px', color: '#6c757d' }}>{tutorial.description}</p>
-                  <div style={{ marginTop: 14 }}>
+            {tutorials.map(tutorial => {
+              const totalModules = tutorial.sections?.length || 0;
+              const totalDuration = tutorial.sections?.reduce((acc, s) => {
+                const min = parseInt(s.duration) || 0;
+                return acc + min;
+              }, 0) || 0;
+              
+              // Buscar resultado del examen para este usuario (simulado)
+              const examResult = examHistory.find(a => a.examId === tutorial.exam?.id);
+              
+              return (
+                <div key={tutorial.id} style={{
+                  background: 'white',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  boxShadow: '0 6px 18px rgba(11,77,150,0.08)',
+                  border: '1px solid #e6eefc'
+                }}>
+                  <div style={{ padding: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                      <div style={{ flex: 1 }}>
+                        <h3 style={{ margin: '0 0 6px 0', fontSize: '16px', fontWeight: '700', color: '#0b3b66' }}>
+                          {tutorial.title}
+                        </h3>
+                        <p style={{ margin: 0, fontSize: '12px', color: '#6c757d' }}>
+                          {tutorial.description}
+                        </p>
+                      </div>
+                      {examResult && (
+                        <div style={{
+                          background: examResult.passed ? '#d4edda' : '#f8d7da',
+                          color: examResult.passed ? '#155724' : '#721c24',
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                          fontWeight: '700',
+                          whiteSpace: 'nowrap',
+                          marginLeft: '12px'
+                        }}>
+                          {examResult.passed ? '✓ APROBADO' : '✗ REPROBADO'}
+                        </div>
+                      )}
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      gap: '16px',
+                      fontSize: '12px',
+                      color: '#666',
+                      marginBottom: '12px',
+                      paddingBottom: '12px',
+                      borderBottom: '1px solid #e6e6e6'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        📚 <strong>{totalModules} módulos</strong>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        ⏱️ <strong>{totalDuration} min</strong>
+                      </div>
+                      {examResult && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          ⭐ <strong>{examResult.percentage}%</strong>
+                        </div>
+                      )}
+                    </div>
+
+                    <div style={{ marginBottom: '14px' }}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        fontSize: '11px',
+                        color: '#666',
+                        marginBottom: '6px',
+                        fontWeight: '600'
+                      }}>
+                        <span>Progreso</span>
+                        <span>{Math.round((tutorial.progress || 0) * 100) / 100}% completado</span>
+                      </div>
+                      <div style={{
+                        background: '#e6e6e6',
+                        borderRadius: '6px',
+                        height: '8px',
+                        overflow: 'hidden'
+                      }}>
+                        <div style={{
+                          background: 'linear-gradient(90deg,#00b4ff,#0080ff)',
+                          height: '100%',
+                          width: `${(tutorial.progress || 0) * 100}%`,
+                          transition: 'width 0.3s ease'
+                        }} />
+                      </div>
+                    </div>
+
                     <button
-                      onClick={() => { if (tutorial.exam) { handleStartExam(tutorial.id); } else { alert('Este curso aún no tiene examen disponible'); } }}
+                      onClick={() => {
+                        if (tutorial.exam) {
+                          handleStartExam(tutorial.id);
+                        } else {
+                          alert('Este curso aún no tiene examen disponible');
+                        }
+                      }}
                       style={{
                         width: '100%',
-                        padding: '10px',
-                        background: tutorial.exam ? 'linear-gradient(90deg,#00b4ff,#00d9ff)' : 'linear-gradient(90deg,#cfcfcf,#e6e6e6)',
+                        padding: '12px',
+                        background: 'linear-gradient(90deg,#00b4ff,#0080ff)',
                         color: 'white',
                         border: 'none',
-                        borderRadius: '8px',
-                        cursor: tutorial.exam ? 'pointer' : 'not-allowed',
-                        fontWeight: '700'
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontWeight: '700',
+                        fontSize: '13px'
                       }}
                     >
-                      {tutorial.exam ? 'Ir al Examen →' : 'Sin Examen'}
+                      {tutorial.exam ? 'Iniciar Curso' : 'Sin Examen'}
                     </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
