@@ -4,6 +4,7 @@ import { BookOpen, Plus, Trash2, LogOut } from 'lucide-react';
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [userType, setUserType] = useState(null);
+  const [currentView, setCurrentView] = useState('courses'); // 'courses' o 'available'
   const [tutorials, setTutorials] = useState([
     {
       id: 1,
@@ -33,6 +34,177 @@ export default function App() {
           }
         ]
       }
+    },
+    {
+      id: 2,
+      title: 'Cableado y Canalización',
+      description: 'Métodos profesionales de instalación y montaje de cables',
+      content: 'Contenido del tutorial...',
+      sections: [
+        { id: 1, title: 'Tipos de Cable', duration: '20' },
+        { id: 2, title: 'Instalación Segura', duration: '35' },
+        { id: 3, title: 'Normativa y Estándares', duration: '40' }
+      ],
+      progress: 0,
+      exam: {
+        id: 'exam-2',
+        questions: [
+          {
+            id: 'q1',
+            text: '¿Cuál es el calibre más común para instalaciones residenciales?',
+            options: ['AWG 2', 'AWG 10', 'AWG 14', 'AWG 20'],
+            correctAnswer: 2
+          },
+          {
+            id: 'q2',
+            text: '¿Cuál es la profundidad mínima de canalización?',
+            options: ['10 cm', '15 cm', '20 cm', '25 cm'],
+            correctAnswer: 1
+          }
+        ]
+      }
+    },
+    {
+      id: 3,
+      title: 'Tableros Eléctricos y Protecciones',
+      description: 'Diseño, montaje y protecciones en tableros industriales',
+      content: 'Contenido del tutorial...',
+      sections: [
+        { id: 1, title: 'Componentes Básicos', duration: '25' },
+        { id: 2, title: 'Diseño de Tableros', duration: '40' },
+        { id: 3, title: 'Dispositivos de Protección', duration: '35' }
+      ],
+      progress: 0,
+      exam: {
+        id: 'exam-3',
+        questions: [
+          {
+            id: 'q1',
+            text: '¿Cuál es la función principal de un interruptor diferencial?',
+            options: ['Cortar voltaje', 'Detectar fugas a tierra', 'Limitar corriente', 'Estabilizar voltaje'],
+            correctAnswer: 1
+          },
+          {
+            id: 'q2',
+            text: '¿Qué es un breaker?',
+            options: ['Un cable', 'Un protector de sobrecorriente', 'Un transformador', 'Un fusible mejorado'],
+            correctAnswer: 1
+          }
+        ]
+      }
+    }
+  ]);
+
+  const [availableCourses] = useState([
+    {
+      id: 101,
+      title: 'Seguridad Eléctrica Básica',
+      description: 'Principios fundamentales de seguridad en instalaciones eléctricas',
+      image: '🔒',
+      sections: [
+        { id: 1, title: 'Riesgos Eléctricos', duration: '20' },
+        { id: 2, title: 'Equipos de Protección', duration: '25' },
+        { id: 3, title: 'Procedimientos Seguros', duration: '30' }
+      ]
+    },
+    {
+      id: 102,
+      title: 'NTC 2050 - Código Eléctrico',
+      description: 'Normativa y cumplimiento de estándares eléctricos colombianos',
+      image: '📋',
+      sections: [
+        { id: 1, title: 'Introducción a NTC', duration: '30' },
+        { id: 2, title: 'Requisitos de Instalación', duration: '35' },
+        { id: 3, title: 'Inspección y Pruebas', duration: '25' }
+      ]
+    },
+    {
+      id: 103,
+      title: 'Transformadores Industriales',
+      description: 'Funcionamiento, instalación y mantenimiento de transformadores',
+      image: '⚡',
+      sections: [
+        { id: 1, title: 'Principios Básicos', duration: '25' },
+        { id: 2, title: 'Tipos de Transformadores', duration: '30' },
+        { id: 3, title: 'Mantenimiento Preventivo', duration: '40' }
+      ]
+    },
+    {
+      id: 104,
+      title: 'Sistemas de Puesta a Tierra',
+      description: 'Diseño e instalación de sistemas de puesta a tierra efectivos',
+      image: '🌍',
+      sections: [
+        { id: 1, title: 'Conceptos Fundamentales', duration: '20' },
+        { id: 2, title: 'Cálculo de Resistencia', duration: '35' },
+        { id: 3, title: 'Instalación Práctica', duration: '40' }
+      ]
+    },
+    {
+      id: 105,
+      title: 'Motores Eléctricos AC/DC',
+      description: 'Funcionamiento y control de motores eléctricos trifásicos',
+      image: '🔄',
+      sections: [
+        { id: 1, title: 'Principios de Operación', duration: '25' },
+        { id: 2, title: 'Control de Velocidad', duration: '30' },
+        { id: 3, title: 'Troubleshooting', duration: '35' }
+      ]
+    },
+    {
+      id: 106,
+      title: 'Luminotecnia y Eficiencia Energética',
+      description: 'Diseño de sistemas de iluminación eficientes y sostenibles',
+      image: '💡',
+      sections: [
+        { id: 1, title: 'Conceptos de Luz', duration: '20' },
+        { id: 2, title: 'Tecnologías LED', duration: '25' },
+        { id: 3, title: 'Cálculo de Niveles', duration: '30' }
+      ]
+    },
+    {
+      id: 107,
+      title: 'Sistemas de Respaldo (UPS)',
+      description: 'Instalación y configuración de sistemas ininterrumpibles de potencia',
+      image: '🔋',
+      sections: [
+        { id: 1, title: 'Tipos de UPS', duration: '25' },
+        { id: 2, title: 'Cálculo de Autonomía', duration: '30' },
+        { id: 3, title: 'Instalación y Pruebas', duration: '35' }
+      ]
+    },
+    {
+      id: 108,
+      title: 'Medición Eléctrica Avanzada',
+      description: 'Uso de instrumentos y análisis de calidad de energía',
+      image: '📊',
+      sections: [
+        { id: 1, title: 'Multímetros Digitales', duration: '20' },
+        { id: 2, title: 'Analizadores de Redes', duration: '30' },
+        { id: 3, title: 'Análisis de Armónicos', duration: '35' }
+      ]
+    },
+    {
+      id: 109,
+      title: 'Energías Renovables - Solar',
+      description: 'Diseño e instalación de sistemas fotovoltaicos',
+      image: '☀️',
+      sections: [
+        { id: 1, title: 'Tecnología Solar', duration: '25' },
+        { id: 2, title: 'Cálculo de Sistemas', duration: '35' },
+        { id: 3, title: 'Conexión a Red', duration: '30' }
+      ]
+    },
+    {
+      id: 110,
+      title: 'Automatización y Control Industrial',
+      description: 'PLC, SCADA y sistemas de automatización moderna',
+      image: '🤖',
+      sections: [
+        { id: 1, title: 'Introducción a PLC', duration: '30' },
+        { id: 2, title: 'Programación Básica', duration: '40' },
+        { id: 3, title: 'Proyectos Prácticos', duration: '45' }
+      ]
     }
   ]);
   const [showAddTutorial, setShowAddTutorial] = useState(false);
@@ -656,7 +828,7 @@ export default function App() {
     return (
       <div style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg,#667eea 0%,#764ba2 100%)',
+        background: 'linear-gradient(135deg, #0a2a4a 0%, #1a3a5a 100%)',
         fontFamily: 'system-ui'
       }}>
         <nav style={{
@@ -674,8 +846,18 @@ export default function App() {
             </h1>
           </div>
           <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
-            <button style={{ background: '#0b5ed7', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer' }}>Inicio</button>
-            <button style={{ background: 'transparent', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer' }}>Mis Cursos</button>
+            <button 
+              onClick={() => setCurrentView('courses')}
+              style={{ background: currentView === 'courses' ? '#0b5ed7' : 'transparent', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer' }}
+            >
+              Mis Cursos
+            </button>
+            <button 
+              onClick={() => setCurrentView('available')}
+              style={{ background: currentView === 'available' ? '#0b5ed7' : 'transparent', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer' }}
+            >
+              Tutoriales Disponibles
+            </button>
             <button
               onClick={() => { setCurrentUser(null); setUserType(null); }}
               style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.08)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
@@ -689,137 +871,246 @@ export default function App() {
           <h2 style={{
             color: 'white',
             fontSize: '28px',
-            fontWeight: 'bold',
-            marginBottom: '30px'
+            fontWeight: '700',
+            marginBottom: '30px',
+            letterSpacing: '-0.5px'
           }}>
-            Mis Cursos
+            {currentView === 'courses' ? 'Mis Cursos' : 'Tutoriales Disponibles'}
           </h2>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '16px'
-          }}>
-            {tutorials.map(tutorial => {
-              const totalModules = tutorial.sections?.length || 0;
-              const totalDuration = tutorial.sections?.reduce((acc, s) => {
-                const min = parseInt(s.duration) || 0;
-                return acc + min;
-              }, 0) || 0;
-              
-              // Buscar resultado del examen para este usuario (simulado)
-              const examResult = examHistory.find(a => a.examId === tutorial.exam?.id);
-              
-              return (
-                <div key={tutorial.id} style={{
-                  background: 'white',
-                  borderRadius: '10px',
-                  overflow: 'hidden',
-                  boxShadow: '0 6px 18px rgba(11,77,150,0.08)',
-                  border: '1px solid #e6eefc'
-                }}>
-                  <div style={{ padding: '20px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                      <div style={{ flex: 1 }}>
-                        <h3 style={{ margin: '0 0 6px 0', fontSize: '16px', fontWeight: '700', color: '#0b3b66' }}>
-                          {tutorial.title}
-                        </h3>
-                        <p style={{ margin: 0, fontSize: '12px', color: '#6c757d' }}>
-                          {tutorial.description}
-                        </p>
-                      </div>
-                      {examResult && (
-                        <div style={{
-                          background: examResult.passed ? '#d4edda' : '#f8d7da',
-                          color: examResult.passed ? '#155724' : '#721c24',
-                          padding: '6px 12px',
-                          borderRadius: '6px',
-                          fontSize: '11px',
-                          fontWeight: '700',
-                          whiteSpace: 'nowrap',
-                          marginLeft: '12px'
-                        }}>
-                          {examResult.passed ? '✓ APROBADO' : '✗ REPROBADO'}
+          {currentView === 'courses' ? (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr',
+              gap: '16px'
+            }}>
+              {tutorials.map(tutorial => {
+                const totalModules = tutorial.sections?.length || 0;
+                const totalDuration = tutorial.sections?.reduce((acc, s) => {
+                  const min = parseInt(s.duration) || 0;
+                  return acc + min;
+                }, 0) || 0;
+                
+                // Buscar resultado del examen para este usuario (simulado)
+                const examResult = examHistory.find(a => a.examId === tutorial.exam?.id);
+                
+                return (
+                  <div key={tutorial.id} style={{
+                    background: 'white',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    border: '1px solid #f0f0f0'
+                  }}>
+                    <div style={{ padding: '20px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                        <div style={{ flex: 1 }}>
+                          <h3 style={{ 
+                            margin: '0 0 6px 0', 
+                            fontSize: '15px', 
+                            fontWeight: '700', 
+                            color: '#1a1a1a',
+                            lineHeight: '1.3'
+                          }}>
+                            {tutorial.title}
+                          </h3>
+                          <p style={{ 
+                            margin: 0, 
+                            fontSize: '13px', 
+                            color: '#666666',
+                            lineHeight: '1.4'
+                          }}>
+                            {tutorial.description}
+                          </p>
                         </div>
-                      )}
-                    </div>
-
-                    <div style={{
-                      display: 'flex',
-                      gap: '16px',
-                      fontSize: '12px',
-                      color: '#666',
-                      marginBottom: '12px',
-                      paddingBottom: '12px',
-                      borderBottom: '1px solid #e6e6e6'
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        📚 <strong>{totalModules} módulos</strong>
+                        {examResult && (
+                          <div style={{
+                            background: examResult.passed ? '#d4edda' : '#f8d7da',
+                            color: examResult.passed ? '#155724' : '#721c24',
+                            padding: '6px 12px',
+                            borderRadius: '4px',
+                            fontSize: '11px',
+                            fontWeight: '700',
+                            whiteSpace: 'nowrap',
+                            marginLeft: '12px'
+                          }}>
+                            {examResult.passed ? '✓ APROBADO' : '✗ REPROBADO'}
+                          </div>
+                        )}
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        ⏱️ <strong>{totalDuration} min</strong>
-                      </div>
-                      {examResult && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          ⭐ <strong>{examResult.percentage}%</strong>
-                        </div>
-                      )}
-                    </div>
 
-                    <div style={{ marginBottom: '14px' }}>
                       <div style={{
                         display: 'flex',
-                        justifyContent: 'space-between',
-                        fontSize: '11px',
-                        color: '#666',
-                        marginBottom: '6px',
-                        fontWeight: '600'
+                        gap: '20px',
+                        fontSize: '13px',
+                        color: '#666666',
+                        marginBottom: '14px',
+                        paddingBottom: '14px',
+                        borderBottom: '1px solid #f0f0f0'
                       }}>
-                        <span>Progreso</span>
-                        <span>{Math.round((tutorial.progress || 0) * 100) / 100}% completado</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '16px' }}>📚</span>
+                          <span><strong>{totalModules} módulos</strong></span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '16px' }}>⏱️</span>
+                          <span><strong>{totalDuration} min</strong></span>
+                        </div>
+                        {examResult && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontSize: '16px' }}>⭐</span>
+                            <span><strong>{examResult.percentage}%</strong></span>
+                          </div>
+                        )}
                       </div>
-                      <div style={{
-                        background: '#e6e6e6',
-                        borderRadius: '6px',
-                        height: '8px',
-                        overflow: 'hidden'
-                      }}>
-                        <div style={{
-                          background: 'linear-gradient(90deg,#00b4ff,#0080ff)',
-                          height: '100%',
-                          width: `${(tutorial.progress || 0) * 100}%`,
-                          transition: 'width 0.3s ease'
-                        }} />
-                      </div>
-                    </div>
 
-                    <button
-                      onClick={() => {
-                        if (tutorial.exam) {
-                          handleStartExam(tutorial.id);
-                        } else {
-                          alert('Este curso aún no tiene examen disponible');
-                        }
-                      }}
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        background: 'linear-gradient(90deg,#00b4ff,#0080ff)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontWeight: '700',
-                        fontSize: '13px'
-                      }}
-                    >
-                      {tutorial.exam ? 'Iniciar Curso' : 'Sin Examen'}
-                    </button>
+                      <div style={{ marginBottom: '14px' }}>
+                        <div style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          fontSize: '12px',
+                          color: '#999999',
+                          marginBottom: '6px',
+                          fontWeight: '600'
+                        }}>
+                          <span>Progreso</span>
+                          <span>{Math.round((tutorial.progress || 0) * 100) / 100}% completado</span>
+                        </div>
+                        <div style={{
+                          background: '#e8e8e8',
+                          borderRadius: '4px',
+                          height: '6px',
+                          overflow: 'hidden'
+                        }}>
+                          <div style={{
+                            background: 'linear-gradient(90deg, #0080ff 0%, #00b4ff 100%)',
+                            height: '100%',
+                            width: `${(tutorial.progress || 0) * 100}%`,
+                            transition: 'width 0.3s ease'
+                          }} />
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          if (tutorial.exam) {
+                            handleStartExam(tutorial.id);
+                          } else {
+                            alert('Este curso aún no tiene examen disponible');
+                          }
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '12px',
+                          background: 'linear-gradient(90deg, #0080ff 0%, #00b4ff 100%)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontWeight: '700',
+                          fontSize: '14px',
+                          letterSpacing: '0.5px'
+                        }}
+                      >
+                        Iniciar Curso
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+              gap: '20px'
+            }}>
+              {availableCourses.map(course => {
+                const totalModules = course.sections?.length || 0;
+                const totalDuration = course.sections?.reduce((acc, s) => {
+                  const min = parseInt(s.duration) || 0;
+                  return acc + min;
+                }, 0) || 0;
+
+                return (
+                  <div key={course.id} style={{
+                    background: 'white',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    border: '1px solid #f0f0f0',
+                    cursor: 'pointer',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    hover: {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 8px 16px rgba(0,0,0,0.15)'
+                    }
+                  }}>
+                    <div style={{
+                      height: '120px',
+                      background: 'linear-gradient(135deg, #0080ff 0%, #00b4ff 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '48px'
+                    }}>
+                      {course.image}
+                    </div>
+                    <div style={{ padding: '16px' }}>
+                      <h3 style={{
+                        margin: '0 0 8px 0',
+                        fontSize: '14px',
+                        fontWeight: '700',
+                        color: '#1a1a1a',
+                        lineHeight: '1.3'
+                      }}>
+                        {course.title}
+                      </h3>
+                      <p style={{
+                        margin: '0 0 12px 0',
+                        fontSize: '12px',
+                        color: '#666666',
+                        lineHeight: '1.4'
+                      }}>
+                        {course.description}
+                      </p>
+                      <div style={{
+                        display: 'flex',
+                        gap: '12px',
+                        fontSize: '12px',
+                        color: '#999999',
+                        marginBottom: '12px',
+                        paddingBottom: '12px',
+                        borderBottom: '1px solid #f0f0f0'
+                      }}>
+                        <span>📚 {totalModules}</span>
+                        <span>⏱️ {totalDuration}m</span>
+                      </div>
+                      <button
+                        onClick={() => {
+                          // Aquí puede agregarse la lógica de inscripción
+                          alert('¡Curso agregado a tus cursos!');
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '10px',
+                          background: 'linear-gradient(90deg, #0080ff 0%, #00b4ff 100%)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontWeight: '700',
+                          fontSize: '13px'
+                        }}
+                      >
+                        Inscribirse
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     );
